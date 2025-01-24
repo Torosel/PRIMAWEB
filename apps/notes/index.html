@@ -1,0 +1,353 @@
+<html><head><base href="." /><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloc-notes avancé</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+    }
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        backdrop-filter: blur(10px);
+    }
+    .toolbar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        padding: 10px;
+        background: rgba(0,0,0,0.03);
+        border-radius: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(to right, #4a90e2, #357abd);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        background: linear-gradient(to right, #357abd, #2b5d8f);
+    }
+    #editor {
+        width: 100%;
+        min-height: 400px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        font-size: 16px;
+        line-height: 1.6;
+        resize: vertical;
+        transition: border-color 0.3s;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    #editor:focus {
+        border-color: #4a90e2;
+        outline: none;
+        box-shadow: inset 0 2px 4px rgba(74,144,226,0.1);
+    }
+    .status-bar {
+        display: flex;
+        justify-content: space-between;
+        color: #666;
+        font-size: 14px;
+        padding: 10px;
+        background: rgba(0,0,0,0.03);
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .note-list {
+        margin-top: 20px;
+        border-top: 2px solid rgba(0,0,0,0.05);
+        padding-top: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .note-item {
+        padding: 15px;
+        background: rgba(255,255,255,0.8);
+        margin-bottom: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .note-item:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    .search-bar {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s;
+        background: rgba(255,255,255,0.9);
+    }
+    .search-bar:focus {
+        border-color: #4a90e2;
+        outline: none;
+        box-shadow: 0 2px 8px rgba(74,144,226,0.1);
+    }
+    @keyframes saveAnimation {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    .save-animation {
+        animation: saveAnimation 0.5s ease;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" class="search-bar" id="searchInput" placeholder="Rechercher dans les notes...">
+        <div class="toolbar">
+            <button onclick="newNote()">📝 Nouvelle Note</button>
+            <button onclick="saveNote()">💾 Enregistrer</button>
+            <button onclick="deleteNote()">🗑️ Supprimer</button>
+            <button onclick="downloadNote()">⬇️ Télécharger</button>
+            <button onclick="toggleBold()">𝐁 Gras</button>
+            <button onclick="toggleItalic()">𝘐 Italique</button>
+        </div>
+        <textarea id="editor" placeholder="Écrivez votre note ici..."></textarea>
+        <div class="status-bar">
+            <span id="wordCount">0 mots</span>
+            <span id="lastSaved">Dernière sauvegarde: Jamais</span>
+            <span id="offlineStatus"></span>
+        </div>
+        <div class="note-list" id="noteList"></div>
+    </div>
+
+<script>
+// Check for offline storage support
+function isStorageAvailable(type) {
+    try {
+        const storage = window[type];
+        const x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+// Initialize storage with error handling
+let notes = [];
+try {
+    const storedNotes = localStorage.getItem('notes');
+    notes = storedNotes ? JSON.parse(storedNotes) : [];
+} catch (e) {
+    console.error('Error loading notes from localStorage:', e);
+    notes = [];
+}
+
+let currentNoteId = null;
+
+function updateWordCount() {
+    const text = document.getElementById('editor').value;
+    const wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+    document.getElementById('wordCount').textContent = `${wordCount} mots`;
+}
+
+function saveNote() {
+    try {
+        const content = document.getElementById('editor').value;
+        if (!content.trim()) {
+            alert('La note ne peut pas être vide!');
+            return;
+        }
+
+        const timestamp = new Date().toLocaleString();
+        
+        if (currentNoteId === null) {
+            const newNote = {
+                id: Date.now(),
+                content,
+                timestamp,
+                title: content.split('\n')[0] || 'Note sans titre'
+            };
+            notes.push(newNote);
+            currentNoteId = newNote.id;
+        } else {
+            const noteIndex = notes.findIndex(note => note.id === currentNoteId);
+            if (noteIndex !== -1) {
+                notes[noteIndex].content = content;
+                notes[noteIndex].timestamp = timestamp;
+                notes[noteIndex].title = content.split('\n')[0] || 'Note sans titre';
+            }
+        }
+        
+        localStorage.setItem('notes', JSON.stringify(notes));
+        const lastSavedElement = document.getElementById('lastSaved');
+        lastSavedElement.textContent = `Dernière sauvegarde: ${timestamp}`;
+        lastSavedElement.classList.add('save-animation');
+        setTimeout(() => lastSavedElement.classList.remove('save-animation'), 500);
+        refreshNoteList();
+    } catch (e) {
+        console.error('Error saving note:', e);
+        alert('Erreur lors de la sauvegarde. Vérifiez que vous avez assez d\'espace de stockage.');
+    }
+}
+
+function newNote() {
+    currentNoteId = null;
+    document.getElementById('editor').value = '';
+    document.getElementById('lastSaved').textContent = 'Dernière sauvegarde: Jamais';
+    updateWordCount();
+}
+
+function deleteNote() {
+    if (currentNoteId !== null) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette note ?')) {
+            try {
+                notes = notes.filter(note => note.id !== currentNoteId);
+                localStorage.setItem('notes', JSON.stringify(notes));
+                newNote();
+                refreshNoteList();
+            } catch (e) {
+                console.error('Error deleting note:', e);
+                alert('Erreur lors de la suppression de la note.');
+            }
+        }
+    }
+}
+
+function downloadNote() {
+    const content = document.getElementById('editor').value;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'note.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+function toggleBold() {
+    const editor = document.getElementById('editor');
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const text = editor.value;
+    editor.value = text.substring(0, start) + '**' + text.substring(start, end) + '**' + text.substring(end);
+}
+
+function toggleItalic() {
+    const editor = document.getElementById('editor');
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const text = editor.value;
+    editor.value = text.substring(0, start) + '_' + text.substring(start, end) + '_' + text.substring(end);
+}
+
+function refreshNoteList() {
+    try {
+        const noteList = document.getElementById('noteList');
+        noteList.innerHTML = '';
+        
+        notes.forEach(note => {
+            const noteElement = document.createElement('div');
+            noteElement.className = 'note-item';
+            noteElement.innerHTML = `
+                <strong>${note.title}</strong>
+                <br>
+                <small style="color: #666;">📅 ${note.timestamp}</small>
+            `;
+            noteElement.onclick = () => loadNote(note.id);
+            noteList.appendChild(noteElement);
+        });
+    } catch (e) {
+        console.error('Error refreshing note list:', e);
+    }
+}
+
+function loadNote(id) {
+    const note = notes.find(note => note.id === id);
+    if (note) {
+        currentNoteId = note.id;
+        document.getElementById('editor').value = note.content;
+        document.getElementById('lastSaved').textContent = `Dernière sauvegarde: ${note.timestamp}`;
+        updateWordCount();
+    }
+}
+
+// Update offline status
+window.addEventListener('online', updateOfflineStatus);
+window.addEventListener('offline', updateOfflineStatus);
+
+function updateOfflineStatus() {
+    const statusElement = document.getElementById('offlineStatus');
+    if (!navigator.onLine) {
+        statusElement.textContent = '🔴 Mode hors ligne';
+        statusElement.style.color = '#ff4444';
+    } else {
+        statusElement.textContent = '🟢 Mode en ligne';
+        statusElement.style.color = '#44ff44';
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    updateOfflineStatus();
+    if (!isStorageAvailable('localStorage')) {
+        alert('Attention: Le stockage local n\'est pas disponible. Vos notes ne seront pas sauvegardées.');
+    }
+    refreshNoteList();
+});
+
+document.getElementById('editor').addEventListener('input', updateWordCount);
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const filteredNotes = notes.filter(note => 
+        note.content.toLowerCase().includes(searchTerm) || 
+        note.title.toLowerCase().includes(searchTerm)
+    );
+    
+    const noteList = document.getElementById('noteList');
+    noteList.innerHTML = '';
+    
+    filteredNotes.forEach(note => {
+        const noteElement = document.createElement('div');
+        noteElement.className = 'note-item';
+        noteElement.innerHTML = `
+            <strong>${note.title}</strong>
+            <br>
+            <small style="color: #666;">📅 ${note.timestamp}</small>
+        `;
+        noteElement.onclick = () => loadNote(note.id);
+        noteList.appendChild(noteElement);
+    });
+});
+
+// Auto-save with error handling
+setInterval(() => {
+    try {
+        if (document.getElementById('editor').value.trim() !== '') {
+            saveNote();
+        }
+    } catch (e) {
+        console.error('Error during auto-save:', e);
+    }
+}, 30000);
+</script>
+</body></html>

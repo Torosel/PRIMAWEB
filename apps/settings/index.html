@@ -1,0 +1,872 @@
+<html><head><base href="." />
+<meta charset="UTF-8">
+<title>ComptaSimple Pro - Gestion de Comptabilité</title>
+<style>
+  :root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --light: #ecf0f1;
+    --warning: #f1c40f;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  body {
+    background: var(--light);
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%);
+    border-bottom: 4px solid var(--secondary);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+    border-left: 4px solid var(--secondary);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .form-group {
+    background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+    border-left: 4px solid var(--warning);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 15px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+  }
+
+  input:focus, select:focus {
+    border-color: var(--secondary);
+    outline: none;
+  }
+
+  button {
+    background: linear-gradient(135deg, var(--secondary) 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  button:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .transactions {
+    background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+    border-right: 4px solid var(--primary);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    transition: all 0.3s ease;
+  }
+
+  .transaction-item:hover {
+    transform: translateX(5px);
+    background: linear-gradient(90deg, #f8f9fa 0%, white 100%);
+  }
+
+  .total {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--success);
+    color: white;
+    border-radius: 10px;
+    text-align: right;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  .expense {
+    color: var(--danger);
+    font-weight: bold;
+  }
+
+  .income {
+    color: var(--success);
+    font-weight: bold;
+  }
+
+  .chart-container {
+    background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+    border-top: 4px solid var(--success);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  #chart {
+    width: 100%;
+    height: 300px;
+  }
+
+  .category-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    margin-left: 10px;
+    background: var(--light);
+  }
+
+  .login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .login-form {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .delete-btn {
+    background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+    padding: 5px 10px;
+    font-size: 0.8em;
+    margin-left: 10px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .danger-zone {
+    margin-top: 20px;
+    padding: 20px;
+    border: 2px dashed var(--danger);
+    border-radius: 10px;
+  }
+
+  .reset-btn {
+    background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+  }
+
+  .logout-btn {
+    background: linear-gradient(135deg, var(--warning) 0%, #f39c12 100%);
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-form">
+      <h2>Connexion / Inscription</h2>
+      <div id="loginSection">
+        <p>Choisissez une option pour commencer:</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin: 20px 0;">
+          <button onclick="loginAsGuest()" style="background: var(--secondary);">Continuer comme invité</button>
+          <div style="text-align: center;">- ou -</div>
+          <div class="form-row">
+            <input type="password" id="passwordInput" placeholder="Entrez votre mot de passe">
+          </div>
+          <button onclick="login()">Se connecter</button>
+        </div>
+        <p style="margin-top: 10px; font-size: 0.9em;">
+          <a href="#" onclick="showRegistration(); return false;">Nouveau utilisateur? Créer un compte</a>
+        </p>
+      </div>
+      
+      <div id="registrationSection" style="display: none;">
+        <p>Créer un nouveau compte</p>
+        <div class="form-row">
+          <input type="text" id="newUserName" placeholder="Votre nom">
+        </div>
+        <div class="form-row">
+          <input type="password" id="newUserPassword" placeholder="Choisir un mot de passe">
+        </div>
+        <button onclick="register()">Créer le compte</button>
+        <p style="margin-top: 10px; font-size: 0.9em;">
+          <a href="#" onclick="showLogin(); return false;">Déjà inscrit? Se connecter</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>ComptaSimple Pro</h1>
+        <p>Gestion avancée de votre comptabilité</p>
+      </div>
+      <div>
+        <select id="currencySelector" onchange="handleCurrencyChange()" style="background: white; margin-right: 10px;">
+          <option value="EUR">EUR - Euro</option>
+          <option value="USD">USD - Dollar US</option>
+          <option value="GBP">GBP - Livre Sterling</option>
+          <option value="CHF">CHF - Franc Suisse</option>
+          <option value="JPY">JPY - Yen Japonais</option>
+          <option value="XOF">XOF - Franc CFA</option>
+          <option value="custom">Autre devise...</option>
+        </select>
+        <div id="customCurrencyInput" style="display: none; margin: 10px 0;">
+          <input type="text" id="customCurrencyCode" placeholder="Code devise (ex: USD)" style="width: 120px; margin-right: 5px;">
+          <input type="number" id="customExchangeRate" placeholder="Taux de change" style="width: 120px; margin-right: 5px;">
+          <button onclick="addCustomCurrency()" style="padding: 5px 10px;">Ajouter</button>
+        </div>
+        <div id="currentDate"></div>
+      </div>
+    </div>
+
+    <div class="stats-cards">
+      <div class="stat-card">
+        <h3>Revenus du mois</h3>
+        <p id="monthlyIncome">0.00</p>
+      </div>
+      <div class="stat-card">
+        <h3>Dépenses du mois</h3>
+        <p id="monthlyExpenses">0.00</p>
+      </div>
+      <div class="stat-card">
+        <h3>Solde du mois</h3>
+        <p id="monthlyBalance">0.00</p>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="chart"></canvas>
+    </div>
+
+    <div class="form-group">
+      <h2>Nouvelle Transaction</h2>
+      <div class="form-row">
+        <div>
+          <label for="date">Date</label>
+          <input type="date" id="date" required>
+        </div>
+        <div>
+          <label for="description">Description</label>
+          <input type="text" id="description" placeholder="Description" required>
+        </div>
+        <div>
+          <label for="amount">Montant</label>
+          <input type="number" id="amount" placeholder="Montant" step="0.01" required>
+        </div>
+        <div>
+          <label for="type">Type</label>
+          <select id="type" required>
+            <option value="income">Revenu</option>
+            <option value="expense">Dépense</option>
+          </select>
+        </div>
+        <div>
+          <label for="category">Catégorie</label>
+          <select id="category">
+            <option value="salaire">Salaire</option>
+            <option value="alimentation">Alimentation</option>
+            <option value="transport">Transport</option>
+            <option value="loisirs">Loisirs</option>
+            <option value="factures">Factures</option>
+            <option value="autres">Autres</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="addTransaction()">Ajouter la transaction</button>
+    </div>
+
+    <div class="transactions">
+      <h2>Transactions Récentes</h2>
+      <div id="transactionList"></div>
+      <div class="total">
+        <h3>Solde Total: <span id="totalBalance">0.00</span></h3>
+      </div>
+    </div>
+
+    <div class="danger-zone">
+      <h3>Zone de danger</h3>
+      <div class="action-buttons">
+        <button class="reset-btn" onclick="confirmReset()">Réinitialiser toutes les données</button>
+        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const USERS = {
+  'guest': {
+    id: 'guest',
+    name: 'Utilisateur Invité',
+    transactions: []
+  }
+};
+
+let isAuthenticated = false;
+let currentUser = null;
+let transactions = [];
+let chart;
+let currentCurrency = 'EUR';
+let exchangeRates = {
+    EUR: 1,
+    USD: 1,
+    GBP: 1,
+    CHF: 1,
+    JPY: 1,
+    XOF: 1
+};
+
+function formatCurrency(amount, currency) {
+    const symbols = {
+        EUR: '€',
+        USD: '$',
+        GBP: '£',
+        CHF: 'CHF',
+        JPY: '¥',
+        XOF: 'CFA'
+    };
+    
+    // No conversion, just format with the symbol
+    let formattedAmount;
+    if (currency === 'JPY') {
+        formattedAmount = Math.round(amount);
+    } else {
+        formattedAmount = amount.toFixed(2);
+    }
+    
+    return `${formattedAmount} ${symbols[currency] || currency}`;
+}
+
+function handleCurrencyChange() {
+    const selector = document.getElementById('currencySelector');
+    const customInput = document.getElementById('customCurrencyInput');
+    
+    if (selector.value === 'custom') {
+        customInput.style.display = 'block';
+    } else {
+        customInput.style.display = 'none';
+        changeCurrency();
+    }
+}
+
+function addCustomCurrency() {
+    const code = document.getElementById('customCurrencyCode').value.toUpperCase();
+    const rate = parseFloat(document.getElementById('customExchangeRate').value);
+    
+    if (!code || code.length !== 3) {
+        alert('Veuillez entrer un code de devise valide (3 lettres)');
+        return;
+    }
+    
+    if (!rate || rate <= 0) {
+        alert('Veuillez entrer un taux de change valide');
+        return;
+    }
+    
+    exchangeRates[code] = rate;
+    
+    const selector = document.getElementById('currencySelector');
+    const option = document.createElement('option');
+    option.value = code;
+    option.text = `${code} - Devise personnalisée`;
+    
+    const customOption = selector.querySelector('option[value="custom"]');
+    selector.insertBefore(option, customOption);
+    
+    selector.value = code;
+    
+    document.getElementById('customCurrencyInput').style.display = 'none';
+    
+    document.getElementById('customCurrencyCode').value = '';
+    document.getElementById('customExchangeRate').value = '';
+    
+    changeCurrency();
+    
+    saveCustomCurrencies();
+}
+
+function saveCustomCurrencies() {
+    const customCurrencies = {};
+    for (const [code, rate] of Object.entries(exchangeRates)) {
+        if (!['EUR', 'USD', 'GBP', 'CHF', 'JPY', 'XOF'].includes(code)) {
+            customCurrencies[code] = rate;
+        }
+    }
+    localStorage.setItem('customCurrencies', JSON.stringify(customCurrencies));
+}
+
+function loadCustomCurrencies() {
+    const saved = localStorage.getItem('customCurrencies');
+    if (saved) {
+        const customCurrencies = JSON.parse(saved);
+        const selector = document.getElementById('currencySelector');
+        const customOption = selector.querySelector('option[value="custom"]');
+        
+        for (const [code, rate] of Object.entries(customCurrencies)) {
+            exchangeRates[code] = rate;
+            
+            const option = document.createElement('option');
+            option.value = code;
+            option.text = `${code} - Devise personnalisée`;
+            selector.insertBefore(option, customOption);
+        }
+    }
+}
+
+function changeCurrency() {
+    const newCurrency = document.getElementById('currencySelector').value;
+    if (newCurrency === currentCurrency) return;
+    
+    currentCurrency = newCurrency;
+    updateTransactionList();
+    updateTotal();
+    updateMonthlyStats();
+    updateChart();
+}
+
+function saveToLocalStorage() {
+    if (!currentUser) return;
+
+    // Save current user's transactions
+    localStorage.setItem(`transactions_${currentUser.id}`, JSON.stringify(transactions));
+
+    // Update the user's transactions in USERS object
+    USERS[currentUser.id].transactions = [...transactions];
+
+    // Save all users data
+    localStorage.setItem('users_data', JSON.stringify(USERS));
+}
+
+function loadFromLocalStorage() {
+    // Load users data first
+    const savedUsers = localStorage.getItem('users_data');
+    if (savedUsers) {
+        Object.assign(USERS, JSON.parse(savedUsers));
+    }
+
+    if (currentUser) {
+        const savedTransactions = localStorage.getItem(`transactions_${currentUser.id}`);
+        if (savedTransactions) {
+            transactions = JSON.parse(savedTransactions);
+            currentUser.transactions = [...transactions]; // Ensure user's transactions are updated
+        } else {
+            transactions = [];
+            currentUser.transactions = [];
+        }
+    }
+}
+
+function loginAsGuest() {
+    isAuthenticated = true;
+    currentUser = USERS['guest'];
+    
+    // Load guest transactions from local storage
+    const savedTransactions = localStorage.getItem(`transactions_${currentUser.id}`);
+    if (savedTransactions) {
+        transactions = JSON.parse(savedTransactions);
+    } else {
+        transactions = [];
+    }
+    currentUser.transactions = transactions;
+    
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('passwordInput').value = '';
+    document.querySelector('.header h1').textContent = `ComptaSimple Pro - ${currentUser.name}`;
+    
+    updateTransactionList();
+    updateTotal();
+    updateMonthlyStats();
+    updateChart();
+}
+
+function login() {
+    const password = document.getElementById('passwordInput').value;
+    const user = USERS[password];
+    
+    if (user) {
+        isAuthenticated = true;
+        currentUser = user;
+        
+        // Load user's transactions from local storage
+        const savedTransactions = localStorage.getItem(`transactions_${currentUser.id}`);
+        if (savedTransactions) {
+            transactions = JSON.parse(savedTransactions);
+        } else {
+            transactions = [];
+        }
+        currentUser.transactions = transactions;
+        
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+        document.querySelector('.header h1').textContent = `ComptaSimple Pro - ${currentUser.name}`;
+        
+        updateTransactionList();
+        updateTotal();
+        updateMonthlyStats();
+        updateChart();
+    } else {
+        alert('Mot de passe incorrect');
+    }
+}
+
+function logout() {
+    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+        if (currentUser) {
+            currentUser.transactions = [...transactions];
+            saveToLocalStorage(); // Save before logging out
+        }
+        
+        isAuthenticated = false;
+        currentUser = null;
+        transactions = [];
+        document.querySelector('.header h1').textContent = 'ComptaSimple Pro';
+        document.getElementById('loginOverlay').style.display = 'flex';
+        
+        updateTransactionList();
+        updateTotal();
+        updateMonthlyStats();
+        updateChart();
+    }
+}
+
+function confirmReset() {
+    if (!currentUser) {
+        alert('Veuillez vous connecter pour réinitialiser les données.');
+        return;
+    }
+    
+    if (confirm('Êtes-vous sûr de vouloir réinitialiser toutes les données ? Cette action est irréversible.')) {
+        transactions = [];
+        currentUser.transactions = [];
+        updateTransactionList();
+        updateTotal();
+        updateMonthlyStats();
+        updateChart();
+        alert('Toutes les données ont été réinitialisées.');
+    }
+}
+
+function initializeChart() {
+    const ctx = document.getElementById('chart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Solde',
+                data: [],
+                borderColor: '#2c3e50',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+
+function updateChart() {
+    const sortedTransactions = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
+    let balance = 0;
+    const labels = [];
+    const data = [];
+
+    sortedTransactions.forEach(transaction => {
+        const amountInEUR = transaction.amount / exchangeRates[transaction.originalCurrency];
+        const amountInCurrentCurrency = amountInEUR * exchangeRates[currentCurrency];
+        
+        balance += transaction.type === 'income' ? amountInCurrentCurrency : -amountInCurrentCurrency;
+        labels.push(transaction.date);
+        data.push(balance);
+    });
+
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.update();
+}
+
+function addTransaction() {
+    if (!isAuthenticated || !currentUser) {
+        alert('Veuillez vous connecter pour ajouter une transaction.');
+        return;
+    }
+
+    const date = document.getElementById('date').value;
+    const description = document.getElementById('description').value;
+    const amount = parseFloat(parseFloat(document.getElementById('amount').value).toFixed(2));
+    const type = document.getElementById('type').value;
+    const category = document.getElementById('category').value;
+
+    if (!date || !description || isNaN(amount)) {
+        alert('Veuillez remplir tous les champs correctement');
+        return;
+    }
+
+    if (amount <= 0) {
+        alert('Le montant doit être supérieur à 0');
+        return;
+    }
+
+    const transaction = {
+        date,
+        description,
+        amount,
+        type,
+        category,
+        originalCurrency: currentCurrency,
+        originalAmount: amount
+    };
+
+    transactions.push(transaction);
+    currentUser.transactions = [...transactions];
+    
+    updateTransactionList();
+    updateTotal();
+    updateMonthlyStats();
+    updateChart();
+    clearForm();
+    
+    saveToLocalStorage(); // Ensure changes are saved
+}
+
+function createNewUser(name, password) {
+    if (USERS[password]) {
+        alert('Ce mot de passe est déjà utilisé. Veuillez en choisir un autre.');
+        return false;
+    }
+    
+    const newUserId = 'user' + (Object.keys(USERS).length + 1);
+    USERS[password] = {
+        id: newUserId,
+        name: name,
+        transactions: []
+    };
+    
+    // Save to local storage immediately
+    localStorage.setItem('users_data', JSON.stringify(USERS));
+    return true;
+}
+
+function showRegistration() {
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('registrationSection').style.display = 'block';
+}
+
+function showLogin() {
+    document.getElementById('loginSection').style.display = 'block';
+    document.getElementById('registrationSection').style.display = 'none';
+}
+
+function register() {
+    const name = document.getElementById('newUserName').value.trim();
+    const password = document.getElementById('newUserPassword').value.trim();
+    
+    if (!name || !password) {
+        alert('Veuillez remplir tous les champs');
+        return;
+    }
+    
+    if (createNewUser(name, password)) {
+        alert('Compte créé avec succès! Vous pouvez maintenant vous connecter.');
+        document.getElementById('newUserName').value = '';
+        document.getElementById('newUserPassword').value = '';
+        showLogin();
+    }
+}
+
+function updateTransactionList() {
+    const transactionList = document.getElementById('transactionList');
+    transactionList.innerHTML = '';
+
+    transactions.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((transaction, index) => {
+        const div = document.createElement('div');
+        div.className = 'transaction-item';
+        div.innerHTML = `
+            <div>
+                <strong>${transaction.date}</strong> - ${transaction.description}
+                <span class="category-tag">${transaction.category}</span>
+            </div>
+            <div>
+                <span class="${transaction.type === 'expense' ? 'expense' : 'income'}">
+                    ${transaction.type === 'expense' ? '-' : '+'} ${formatCurrency(transaction.amount, currentCurrency)}
+                </span>
+                <button class="delete-btn" onclick="deleteTransaction(${index})">Supprimer</button>
+            </div>
+        `;
+        transactionList.appendChild(div);
+    });
+}
+
+function deleteTransaction(index) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette transaction ?')) {
+        transactions.splice(index, 1);
+        currentUser.transactions = [...transactions]; // Update user's transactions
+        
+        updateTransactionList();
+        updateTotal();
+        updateMonthlyStats();
+        updateChart();
+        
+        saveToLocalStorage(); // Ensure changes are saved
+    }
+}
+
+function updateTotal() {
+    const total = transactions.reduce((acc, transaction) => {
+        const amountInEUR = transaction.amount / exchangeRates[transaction.originalCurrency];
+        const amountInCurrentCurrency = amountInEUR * exchangeRates[currentCurrency];
+        
+        return transaction.type === 'expense' 
+            ? acc - amountInCurrentCurrency 
+            : acc + amountInCurrentCurrency;
+    }, 0);
+
+    document.getElementById('totalBalance').textContent = formatCurrency(total, currentCurrency);
+}
+
+function updateMonthlyStats() {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    const monthlyTransactions = transactions.filter(transaction => {
+        const transDate = new Date(transaction.date);
+        return transDate.getMonth() === currentMonth && transDate.getFullYear() === currentYear;
+    });
+
+    const income = monthlyTransactions
+        .filter(t => t.type === 'income')
+        .reduce((acc, t) => {
+            const amountInEUR = t.amount / exchangeRates[t.originalCurrency];
+            const amountInCurrentCurrency = amountInEUR * exchangeRates[currentCurrency];
+            return acc + amountInCurrentCurrency;
+        }, 0);
+
+    const expenses = monthlyTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => {
+            const amountInEUR = t.amount / exchangeRates[t.originalCurrency];
+            const amountInCurrentCurrency = amountInEUR * exchangeRates[currentCurrency];
+            return acc + amountInCurrentCurrency;
+        }, 0);
+
+    document.getElementById('monthlyIncome').textContent = formatCurrency(income, currentCurrency);
+    document.getElementById('monthlyExpenses').textContent = formatCurrency(expenses, currentCurrency);
+    document.getElementById('monthlyBalance').textContent = formatCurrency(income - expenses, currentCurrency);
+}
+
+function clearForm() {
+    document.getElementById('date').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('amount').value = '';
+    document.getElementById('type').value = 'income';
+    document.getElementById('category').value = 'autres';
+}
+
+function updateCurrentDate() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('fr-FR', options);
+}
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', () => {
+    // Load saved users first
+    const savedUsers = localStorage.getItem('users_data');
+    if (savedUsers) {
+        Object.assign(USERS, JSON.parse(savedUsers));
+    }
+    
+    initializeChart();
+    document.getElementById('date').valueAsDate = new Date();
+    updateCurrentDate();
+    setInterval(updateCurrentDate, 1000 * 60); // Met à jour la date chaque minute
+    
+    loadFromLocalStorage();
+    loadCustomCurrencies();
+    
+    if (!isAuthenticated) {
+        document.getElementById('loginOverlay').style.display = 'flex';
+    }
+});
+
+// Add automatic saving on window unload
+window.addEventListener('beforeunload', function() {
+    if (currentUser) {
+        saveToLocalStorage();
+    }
+});
+</script>
+
+</body>
+</html>

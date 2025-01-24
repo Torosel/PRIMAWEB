@@ -1,0 +1,506 @@
+<html><head><base href="https://calculatrice-pro-converter-imc.web/">
+<title>Calculatrice Professionnelle avec Convertisseur de Devises et Calcul d'IMC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  background: linear-gradient(45deg, #2c3e50, #34495e);
+  color: #ecf0f1;
+}
+
+.calculator {
+  background-color: #2c3e50;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.6);
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+#display {
+  width: calc(100% - 20px);
+  height: 80px;
+  font-size: 2.2em;
+  text-align: right;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+}
+
+.imc-input {
+  width: calc(100% - 10px);
+  height: 60px;
+  font-size: 1.8em;
+  text-align: right;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: none;
+  background-color: #34495e;
+  color: #ecf0f1;
+  border-radius: 5px;
+}
+
+.imc-input::-webkit-inner-spin-button,
+.imc-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.imc-input {
+  -moz-appearance: textfield;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+}
+
+button {
+  padding: 20px 15px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+.operator {
+  background-color: #f39c12;
+}
+
+.operator:hover {
+  background-color: #e67e22;
+}
+
+#equals {
+  background-color: #2ecc71;
+}
+
+#equals:hover {
+  background-color: #27ae60;
+}
+
+#clear, #backspace {
+  background-color: #e74c3c;
+}
+
+#clear:hover, #backspace:hover {
+  background-color: #c0392b;
+}
+
+.function {
+  background-color: #9b59b6;
+}
+
+.function:hover {
+  background-color: #8e44ad;
+}
+
+#mode-toggle, #imc-toggle, #imc-toggle-back {
+  margin-bottom: 15px;
+  padding: 12px;
+  font-size: 1em;
+  background-color: #3498db;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#mode-toggle:hover, #imc-toggle:hover, #imc-toggle-back:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.hidden {
+  display: none;
+}
+
+#imc-calculator {
+  margin-top: 20px;
+}
+
+#convert-button, #calculate-imc {
+  width: 100%;
+  padding: 10px;
+  background-color: #2980b9;
+  color: #ecf0f1;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+#calculate-imc:hover {
+  background-color: #3498db;
+}
+
+#imc-result {
+  margin-top: 10px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+#imc-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #ecf0f1;
+  border-radius: 10px;
+  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.imc-segment {
+  height: 100%;
+  position: absolute;
+}
+
+#underweight {
+  width: 18.5%;
+  background-color: #3498db;
+  left: 0;
+}
+
+#normal {
+  width: 6.5%;
+  background-color: #2ecc71;
+  left: 18.5%;
+}
+
+#overweight {
+  width: 5%;
+  background-color: #f39c12;
+  left: 25%;
+}
+
+#obese {
+  width: 75%;
+  background-color: #e74c3c;
+  right: 0;
+}
+
+#imc-marker {
+  width: 2px;
+  height: 30px;
+  background-color: #000;
+  position: absolute;
+  top: -5px;
+  transform: translateX(-50%);
+  transition: left 0.3s ease;
+}
+
+/* Media queries for different screen sizes */
+@media screen and (max-width: 480px) {
+  .calculator {
+    padding: 15px;
+  }
+  
+  #display {
+    height: 60px;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+  }
+  
+  .buttons {
+    gap: 8px;
+  }
+  
+  button {
+    padding: 15px 10px;
+    font-size: 1em;
+  }
+  
+  .imc-input {
+    height: 50px;
+    font-size: 1.5em;
+  }
+  
+  #mode-toggle, #imc-toggle, #imc-toggle-back {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .calculator {
+    padding: 10px;
+  }
+  
+  .buttons {
+    gap: 6px;
+  }
+  
+  button {
+    padding: 12px 8px;
+    font-size: 0.9em;
+  }
+}
+
+/* Add touch-friendly improvements */
+@media (hover: none) {
+  button {
+    touch-action: manipulation;
+  }
+  
+  button:hover {
+    background-color: inherit;
+  }
+}
+</style>
+</head>
+<body>
+<div class="calculator">
+  <div id="calculator-section">
+    <button id="mode-toggle">Mode Standard / Professionnel</button>
+    <button id="imc-toggle">Passer au calcul IMC</button>
+    <input type="text" id="display" readonly>
+    <div id="calculator-buttons" class="buttons">
+      <button class="function hidden" onclick="calculate('sin')">sin</button>
+      <button class="function hidden" onclick="calculate('cos')">cos</button>
+      <button class="function hidden" onclick="calculate('tan')">tan</button>
+      <button class="function hidden" onclick="calculate('log')">log</button>
+      <button class="function hidden" onclick="calculate('ln')">ln</button>
+      
+      <button onclick="appendToDisplay('7')">7</button>
+      <button onclick="appendToDisplay('8')">8</button>
+      <button onclick="appendToDisplay('9')">9</button>
+      <button class="operator" onclick="appendToDisplay('+')">+</button>
+      <button id="backspace" onclick="backspace()">←</button>
+      
+      <button onclick="appendToDisplay('4')">4</button>
+      <button onclick="appendToDisplay('5')">5</button>
+      <button onclick="appendToDisplay('6')">6</button>
+      <button class="operator" onclick="appendToDisplay('-')">-</button>
+      <button class="function hidden" onclick="calculate('sqrt')">√</button>
+      
+      <button onclick="appendToDisplay('1')">1</button>
+      <button onclick="appendToDisplay('2')">2</button>
+      <button onclick="appendToDisplay('3')">3</button>
+      <button class="operator" onclick="appendToDisplay('*')">×</button>
+      <button class="function hidden" onclick="calculate('pow')">x^y</button>
+      
+      <button onclick="appendToDisplay('0')">0</button>
+      <button onclick="appendToDisplay('.')">.</button>
+      <button id="clear" onclick="clearDisplay()">C</button>
+      <button class="operator" onclick="appendToDisplay('/')">÷</button>
+      <button id="equals" onclick="calculate('=')">=</button>
+      
+      <button class="function hidden" onclick="calculate('pi')">π</button>
+      <button class="function hidden" onclick="calculate('e')">e</button>
+      <button class="function hidden" onclick="toggleSign()">+/-</button>
+      <button class="function hidden" onclick="calculate('fact')">n!</button>
+      <button class="function hidden" onclick="calculate('exp')">exp</button>
+    </div>
+  </div>
+  
+  <div id="imc-calculator" class="hidden">
+    <button id="imc-toggle-back">Retour à la calculatrice</button>
+    <input type="number" id="weight" class="imc-input" placeholder="Poids (kg)">
+    <input type="number" id="height" class="imc-input" placeholder="Taille (cm)">
+    <button id="calculate-imc" onclick="calculateIMC()">Calculer IMC</button>
+    <div id="imc-result"></div>
+    <div id="imc-bar">
+      <div id="underweight" class="imc-segment"></div>
+      <div id="normal" class="imc-segment"></div>
+      <div id="overweight" class="imc-segment"></div>
+      <div id="obese" class="imc-segment"></div>
+      <div id="imc-marker"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  let isProfessionalMode = false;
+  let currentMode = 'calculator';
+
+  window.appendToDisplay = function(value) {
+    document.getElementById('display').value += value;
+  };
+
+  window.clearDisplay = function() {
+    document.getElementById('display').value = '';
+  };
+
+  window.backspace = function() {
+    let currentValue = document.getElementById('display').value;
+    document.getElementById('display').value = currentValue.slice(0, -1);
+  };
+
+  window.calculate = function(operation) {
+    let result;
+    const currentValue = parseFloat(document.getElementById('display').value);
+    
+    switch(operation) {
+      case '=':
+        try {
+          result = eval(document.getElementById('display').value);
+        } catch (error) {
+          result = 'Erreur';
+        }
+        break;
+      case 'sin':
+        result = Math.sin(currentValue);
+        break;
+      case 'cos':
+        result = Math.cos(currentValue);
+        break;
+      case 'tan':
+        result = Math.tan(currentValue);
+        break;
+      case 'log':
+        result = Math.log10(currentValue);
+        break;
+      case 'ln':
+        result = Math.log(currentValue);
+        break;
+      case 'sqrt':
+        result = Math.sqrt(currentValue);
+        break;
+      case 'pow':
+        document.getElementById('display').value += '^';
+        return;
+      case 'exp':
+        result = Math.exp(currentValue);
+        break;
+      case 'pi':
+        result = Math.PI;
+        break;
+      case 'e':
+        result = Math.E;
+        break;
+      case 'fact':
+        result = factorial(Math.round(currentValue));
+        break;
+      default:
+        return;
+    }
+    
+    document.getElementById('display').value = result;
+  };
+
+  function factorial(n) {
+    if (n === 0 || n === 1) return 1;
+    return n * factorial(n - 1);
+  }
+
+  function toggleMode() {
+    isProfessionalMode = !isProfessionalMode;
+    const functionsButtons = document.querySelectorAll('.function');
+    functionsButtons.forEach(button => {
+      button.classList.toggle('hidden');
+    });
+    
+    document.getElementById('mode-toggle').textContent = 
+      isProfessionalMode ? "Mode Professionnel" : "Mode Standard";
+  }
+
+  function switchMode(newMode) {
+    document.getElementById('calculator-section').classList.add('hidden');
+    document.getElementById('imc-calculator').classList.add('hidden');
+
+    switch(newMode) {
+      case 'calculator':
+        document.getElementById('calculator-section').classList.remove('hidden');
+        document.getElementById('imc-toggle').textContent = 'Passer au calcul IMC';
+        break;
+      case 'imc':
+        document.getElementById('imc-calculator').classList.remove('hidden');
+        document.getElementById('imc-toggle-back').textContent = 'Retour à la calculatrice';
+        break;
+    }
+
+    currentMode = newMode;
+  }
+
+  window.calculateIMC = function() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value) / 100; // convert cm to m
+    
+    if (isNaN(weight) || isNaN(height) || height === 0) {
+      document.getElementById('imc-result').textContent = "Veuillez entrer des valeurs valides.";
+      return;
+    }
+    
+    const imc = weight / (height * height);
+    const imcRounded = imc.toFixed(1);
+    let category, color;
+    
+    if (imc < 18.5) {
+      category = "Maigreur";
+      color = "#3498db";  // Bleu
+    } else if (imc < 25) {
+      category = "Poids normal";
+      color = "#2ecc71";  // Vert
+    } else if (imc < 30) {
+      category = "Surpoids";
+      color = "#f39c12";  // Orange
+    } else {
+      category = "Obésité";
+      color = "#e74c3c";  // Rouge
+    }
+    
+    document.getElementById('imc-result').textContent = `IMC: ${imcRounded} - ${category}`;
+    document.getElementById('imc-result').style.color = color;
+    
+    // Update the IMC marker position
+    const markerPosition = Math.min(Math.max(imc, 15), 40); // Clamp between 15 and 40
+    const percentage = ((markerPosition - 15) / 25) * 100; // Map 15-40 to 0-100%
+    document.getElementById('imc-marker').style.left = `${percentage}%`;
+  };
+
+  document.getElementById('mode-toggle').addEventListener('click', toggleMode);
+  document.getElementById('imc-toggle').addEventListener('click', () => switchMode('imc'));
+  document.getElementById('imc-toggle-back').addEventListener('click', () => switchMode('calculator'));
+
+  document.addEventListener('keydown', function(event) {
+    if (currentMode !== 'calculator') return;
+    
+    const key = event.key;
+    if (/[0-9+\-*/.=]/.test(key)) {
+      event.preventDefault();
+      if (key === '=') {
+        calculate('=');
+      } else {
+        appendToDisplay(key);
+      }
+    } else if (key === 'Enter') {
+      event.preventDefault();
+      calculate('=');
+    } else if (key === 'Backspace') {
+      event.preventDefault();
+      backspace();
+    } else if (key === 'Escape') {
+      event.preventDefault();
+      clearDisplay();
+    }
+  });
+
+  document.getElementById('weight').addEventListener('keypress', function(event) {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+      event.preventDefault();
+    }
+  });
+
+  document.getElementById('height').addEventListener('keypress', function(event) {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+    }
+  });
+})();
+</script>
+</body></html>

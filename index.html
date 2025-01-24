@@ -1,0 +1,1283 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P.R.I.M.A</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&amp;display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+        background-size: cover;
+        background-position: center;
+        animation: gradientBG 15s ease infinite;
+        color: #333;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-size: cover; 
+        background-repeat: no-repeat; 
+        position: relative !important;
+        overflow-y: auto !important;
+        width: 100%;
+        height: 100%;
+      }
+
+      @keyframes gradientBG {
+        0% { background-position: 0% 50% }
+        50% { background-position: 100% 50% }
+        100% { background-position: 0% 50% }
+      }
+
+      .container {
+        padding-top: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 48px;
+        overflow: hidden;
+        position: relative;
+        max-width: 100%;
+        padding: 0 10px;
+      }
+
+      h1 {
+        font-size: clamp(1.8em, 5vw, 3em);
+        margin-bottom: 30px;
+        color: #fff;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        text-align: center;
+        letter-spacing: 2px;
+        font-weight: 700;
+      }
+
+      .category-name {
+        font-size: 1em;
+        margin: 3px 0 8px 0;
+        padding-left: 8px;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        width: 90%;
+        max-width: 600px;
+        text-align: left;
+      }
+
+      .app-pages-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 0;
+        overflow: hidden;
+        touch-action: pan-x pinch-zoom;
+        user-select: none;
+      }
+
+      .app-pages {
+        display: flex;
+        transition: transform 0.3s ease;
+        width: 500%;
+        height: 100%;
+        touch-action: pan-x pinch-zoom;
+      }
+
+      .app-page {
+        height: 100%;
+        padding: 20px 0;
+        box-sizing: border-box;
+        flex-shrink: 0;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .app-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        grid-auto-rows: minmax(80px, auto);
+        gap: 0.5rem;
+        width: 95%;
+        max-width: 100%;
+        padding: 0.5rem;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
+
+      .app {
+        aspect-ratio: 1;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(255,255,255,0.2);
+        border-radius: 12px;
+        padding: 0.75rem 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        min-width: 0;
+      }
+
+      .app:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      }
+
+      .app:active {
+        transform: translateY(0px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .app-icon {
+        font-size: clamp(1.8em, 8vw, 2.4em);
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+        line-height: 1;
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      }
+
+      .app a {
+        font-size: clamp(0.7em, 2.5vw, 0.9em);
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        text-align: center;
+        width: 100%;
+        line-height: 1.2;
+        margin-top: auto;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+
+      .app a:hover {
+        color: white;
+        opacity: 0.9;
+      }
+
+      @media (max-width: 768px) {
+        .app-grid {
+          grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+          gap: 0.375rem;
+          padding: 0.375rem;
+          width: 98%;
+        }
+        
+        .app {
+          padding: 0.5rem 0.25rem;
+        }
+        
+        .app-icon {
+          font-size: clamp(1.6em, 7vw, 2em);
+          margin-bottom: 0.25rem;
+        }
+        
+        .app a {
+          font-size: clamp(0.65em, 2.25vw, 0.8em);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .app-grid {
+          grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
+          gap: 0.25rem;
+          padding: 0.25rem;
+          width: 100%;
+        }
+        
+        .app {
+          padding: 0.4rem 0.2rem;
+        }
+        
+        .app-icon {
+          font-size: clamp(1.4em, 6vw, 1.8em);
+          margin-bottom: 0.2rem;
+        }
+        
+        .app a {
+          font-size: clamp(0.6em, 2vw, 0.75em);
+        }
+      }
+
+      .navigation-dots {
+        position: absolute; 
+        bottom: 60px;  
+        left: 50%;
+        transform: translateX(-50%);
+        backdrop-filter: blur(8px);
+        background: rgba(0,0,0,0.5);
+        padding: 12px 24px;
+        border-radius: 25px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 0;
+        z-index: 100;  
+      }
+
+      .dot {
+        width: 14px;  
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.6);
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .dot.active {
+        background: #fff;
+        box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      }
+
+      .dot:hover {
+        transform: scale(1.2);
+      }
+
+      .logo {
+        color: white !important;
+        -webkit-text-fill-color: white !important;
+        background: none !important;
+        letter-spacing: 15px;
+        font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        margin-top: 20px;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      .settings-btn {
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(255,255,255,0.2);
+        border-radius: 12px;
+        width: 48px;
+        height: 48px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      .settings-btn:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      }
+
+      .settings-btn:active {
+        transform: translateY(0px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .settings-btn svg {
+        width: 24px;
+        height: 24px;
+        fill: #fff;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        transition: transform 0.3s ease;
+      }
+
+      .settings-btn:hover svg {
+        transform: rotate(90deg);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex !important;
+      }
+
+      .modal-content {
+        background: white; 
+        padding: 2rem;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        position: relative;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .modal-close-x {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        z-index: 10;
+      }
+
+      .modal-close-x:hover {
+        color: #666;
+      }
+
+      .setting-group {
+        margin: 1.5rem 0;
+      }
+
+      .setting-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .setting-group select,
+      .setting-group input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      .setting-group input[type="checkbox"] {
+        width: auto;
+        margin-left: 10px;
+      }
+
+      .setting-group input[type="range"] {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .setting-group #icon-size-value {
+        display: inline-block;
+        margin-left: 10px;
+        font-weight: normal;
+        color: #666;
+      }
+
+      .close-modal {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background: #2196F3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.3s ease;
+      }
+
+      .close-modal:hover {
+        background: #1976D2;
+      }
+
+      .taskbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 48px;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4px; 
+        box-sizing: border-box;
+        z-index: 1000;
+      }
+
+      .taskbar-apps {
+        display: flex;
+        gap: 5px; 
+        align-items: center;
+      }
+
+      .taskbar-right {
+        display: flex; 
+        gap: 5px; 
+        align-items: center;
+      }
+
+      .taskbar-app {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 24px;
+        color: white;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      .taskbar-app:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      }
+
+      .taskbar-app:active {
+        transform: translateY(0px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .taskbar-app.prima-text {
+        color: white;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        background: linear-gradient(45deg, #2196F3, #00BCD4);
+        -webkit-background-clip: text;
+        background-clip: text;
+        padding: 0 20px;
+        font-size: 26px;
+      }
+
+      .taskbar-app:first-child {
+        width: auto;
+        padding: 0 15px;
+        font-family: system-ui;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: bold;
+      }
+
+      .prima-menu {
+        display: none;
+        position: fixed;
+        bottom: 48px;
+        left: 0;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 12px 12px 0 0;
+        padding: 12px;
+        min-width: 280px;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+        z-index: 1001;
+        transition: all 0.3s ease;
+      }
+
+      .prima-menu.active {
+        display: block;
+      }
+
+      .prima-menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        gap: 12px;
+      }
+
+      .prima-menu-item:hover {
+        background: rgba(255,255,255,0.1);
+      }
+
+      .prima-menu-icon {
+        font-size: 24px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .prima-menu-text {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .floating-btn {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(255,255,255,0.2);
+        border-radius: 50%;
+        cursor: move;
+        touch-action: none;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        z-index: 1000;
+        bottom: 56px;
+        left: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+
+      .floating-btn:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      }
+
+      .floating-btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .search-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto 20px auto;
+        padding: 0 15px;
+        box-sizing: border-box;
+      }
+
+      .search-bar {
+        width: 100%;
+        padding: 12px 45px 12px 45px;
+        border: none;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.95);
+        font-size: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+
+      .search-bar:focus {
+        outline: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        background: #fff;
+      }
+
+      .search-wrapper {
+        position: relative;
+        width: 100%;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 18px;
+      }
+
+      .search-type {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 14px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      .search-type:hover {
+        color: #333;
+      }
+
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 15px;
+        margin-top: 5px;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        z-index: 1000;
+        display: none;
+      }
+
+      .search-results.active {
+        display: block;
+      }
+
+      .result-item {
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .result-item:hover {
+        background: #f5f5f5;
+      }
+
+      .result-icon {
+        margin-right: 10px;
+        font-size: 20px;
+      }
+
+      .result-title {
+        font-size: 14px;
+        color: #333;
+      }
+
+      .result-type {
+        margin-left: auto;
+        font-size: 12px;
+        color: #666;
+        padding: 2px 8px;
+        background: #f0f0f0;
+        border-radius: 10px;
+      }
+    </style>
+    <script>let touchStartX = 0;
+let touchEndX = 0;
+let currentPage = 0;
+function handleTouchStart(e) {
+  touchStartX = e.touches[0].clientX;
+}
+function handleTouchMove(e) {
+  touchEndX = e.touches[0].clientX;
+}
+function handleWheel(e) {
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+    e.preventDefault();
+    if (e.deltaX > 50 && currentPage < 4) {
+      goToPage(currentPage + 1);
+    } else if (e.deltaX < -50 && currentPage > 0) {
+      goToPage(currentPage - 1);
+    }
+  }
+}
+function goToPage(pageNum) {
+  if (pageNum < 0 || pageNum > 4) return;
+  const appPages = document.querySelector('.app-pages');
+  const dots = document.querySelectorAll('.dot');
+  currentPage = pageNum;
+  appPages.style.transform = `translateX(-${pageNum * 20}%)`;
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === pageNum);
+  });
+}
+function handleSwipe() {
+  const diffX = touchEndX - touchStartX;
+  const threshold = 50;
+  if (Math.abs(diffX) > threshold) {
+    if (diffX > 0 && currentPage > 0) {
+      goToPage(currentPage - 1);
+    } else if (diffX < 0 && currentPage < 4) {
+      goToPage(currentPage + 1);
+    }
+  }
+}
+function dragElement(elmnt) {
+  let pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  elmnt.onmousedown = dragMouseDown;
+  elmnt.ontouchstart = dragTouchStart;
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  function dragTouchStart(e) {
+    e.preventDefault();
+    pos3 = e.touches[0].clientX;
+    pos4 = e.touches[0].clientY;
+    document.ontouchend = closeDragElement;
+    document.ontouchmove = elementTouchDrag;
+  }
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    requestAnimationFrame(() => {
+      const newTop = elmnt.offsetTop - pos2;
+      const newLeft = elmnt.offsetLeft - pos1;
+      const maxX = window.innerWidth - elmnt.offsetWidth;
+      const maxY = window.innerHeight - elmnt.offsetHeight - 52;
+      elmnt.style.top = Math.min(Math.max(0, newTop), maxY) + "px";
+      elmnt.style.left = Math.min(Math.max(0, newLeft), maxX) + "px";
+    });
+  }
+  function elementTouchDrag(e) {
+    e.preventDefault();
+    pos1 = pos3 - e.touches[0].clientX;
+    pos2 = pos4 - e.touches[0].clientY;
+    pos3 = e.touches[0].clientX;
+    pos4 = e.touches[0].clientY;
+    requestAnimationFrame(() => {
+      const newTop = elmnt.offsetTop - pos2;
+      const newLeft = elmnt.offsetLeft - pos1;
+      const maxX = window.innerWidth - elmnt.offsetWidth;
+      const maxY = window.innerHeight - elmnt.offsetHeight - 52;
+      elmnt.style.top = Math.min(Math.max(0, newTop), maxY) + "px";
+      elmnt.style.left = Math.min(Math.max(0, newLeft), maxX) + "px";
+    });
+  }
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+    document.ontouchend = null;
+    document.ontouchmove = null;
+  }
+}
+function handleSearch() {
+  const searchBar = document.querySelector('.search-bar');
+  const searchResults = document.querySelector('.search-results');
+  const searchType = document.querySelector('.search-type');
+  let searchMode = 'apps';
+  function getAllApps() {
+    const apps = [];
+    document.querySelectorAll('.app').forEach(app => {
+      apps.push({
+        title: app.querySelector('a').textContent,
+        icon: app.querySelector('.app-icon').textContent,
+        url: app.querySelector('a').href,
+        type: 'Application'
+      });
+    });
+    return apps;
+  }
+  function filterApps(query) {
+    return getAllApps().filter(app => app.title.toLowerCase().includes(query.toLowerCase()));
+  }
+  async function searchWeb(query) {
+    return [{
+      title: `Rechercher "${query}" sur Google`,
+      icon: '🌐',
+      url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+      type: 'Web'
+    }, {
+      title: `Rechercher "${query}" sur Bing`,
+      icon: '🔍',
+      url: `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
+      type: 'Web'
+    }, {
+      title: `Rechercher "${query}" sur DuckDuckGo`,
+      icon: '🦆',
+      url: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
+      type: 'Web'
+    }];
+  }
+  function renderResults(results) {
+    if (!results.length) {
+      searchResults.style.display = 'none';
+      return;
+    }
+    searchResults.innerHTML = results.map(result => `
+      <div class="result-item" data-url="${result.url}">
+        <span class="result-icon">${result.icon}</span>
+        <span class="result-title">${result.title}</span>
+        <span class="result-type">${result.type}</span>
+      </div>
+    `).join('');
+    searchResults.classList.add('active');
+  }
+  searchBar.addEventListener('input', async () => {
+    const query = searchBar.value.trim();
+    if (!query) {
+      searchResults.classList.remove('active');
+      return;
+    }
+    let results = [];
+    if (searchMode === 'apps') {
+      results = filterApps(query);
+    } else {
+      results = await searchWeb(query);
+    }
+    renderResults(results);
+  });
+  searchType.addEventListener('click', () => {
+    searchMode = searchMode === 'apps' ? 'web' : 'apps';
+    searchType.textContent = searchMode === 'apps' ? '🔄' : '🌐';
+    searchBar.placeholder = searchMode === 'apps' ? 'Rechercher des applications...' : 'Rechercher sur le web...';
+    if (searchBar.value) {
+      searchBar.dispatchEvent(new Event('input'));
+    }
+  });
+  searchResults.addEventListener('click', e => {
+    const resultItem = e.target.closest('.result-item');
+    if (resultItem) {
+      window.location.href = resultItem.dataset.url;
+    }
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrapper')) {
+      searchResults.classList.remove('active');
+    }
+  });
+}
+function handleIconSizeChange() {
+  const iconSizeSlider = document.getElementById('icon-size');
+  const iconSizeValue = document.getElementById('icon-size-value');
+  const apps = document.querySelectorAll('.app-icon');
+  iconSizeSlider.addEventListener('input', e => {
+    const size = e.target.value;
+    iconSizeValue.textContent = `${size}px`;
+    apps.forEach(app => {
+      app.style.fontSize = `${size}px`;
+    });
+    saveSettings();
+  });
+}
+function togglePrimaMenu() {
+  const primaMenu = document.querySelector('.prima-menu');
+  primaMenu.classList.toggle('active');
+}
+function saveSettings() {
+  const settings = {
+    iconSize: document.getElementById('icon-size').value,
+    backgroundStyle: document.getElementById('background-style').value,
+    backgroundTime: document.getElementById('background-time').value,
+    backgroundAuto: document.getElementById('background-auto').checked,
+    language: document.getElementById('language').value
+  };
+  localStorage.setItem('primaSettings', JSON.stringify(settings));
+}
+function loadSettings() {
+  const savedSettings = localStorage.getItem('primaSettings');
+  if (savedSettings) {
+    const settings = JSON.parse(savedSettings);
+    document.getElementById('icon-size').value = settings.iconSize;
+    document.getElementById('background-style').value = settings.backgroundStyle;
+    document.getElementById('background-time').value = settings.backgroundTime;
+    document.getElementById('background-auto').checked = settings.backgroundAuto;
+    document.getElementById('language').value = settings.language;
+    const apps = document.querySelectorAll('.app-icon');
+    apps.forEach(app => {
+      app.style.fontSize = `${settings.iconSize}px`;
+    });
+    document.getElementById('icon-size-value').textContent = `${settings.iconSize}px`;
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  loadSettings();
+  const settingsBtn = document.querySelector('.settings-btn');
+  const settingsModal = document.getElementById('settings-modal');
+  const closeModalBtn = document.querySelector('.modal-close-x');
+  const closeModalButton = document.querySelector('.close-modal');
+  settingsBtn.addEventListener('click', () => {
+    settingsModal.classList.add('active');
+  });
+  closeModalBtn.addEventListener('click', () => {
+    saveSettings();
+    settingsModal.classList.remove('active');
+  });
+  closeModalButton.addEventListener('click', () => {
+    saveSettings();
+    settingsModal.classList.remove('active');
+  });
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => goToPage(i));
+  });
+  const appPagesContainer = document.querySelector('.app-pages-container');
+  appPagesContainer.addEventListener('touchstart', handleTouchStart, {
+    passive: true
+  });
+  appPagesContainer.addEventListener('touchmove', handleTouchMove, {
+    passive: true
+  });
+  appPagesContainer.addEventListener('touchend', handleSwipe);
+  appPagesContainer.addEventListener('wheel', handleWheel, {
+    passive: false
+  });
+  settingsModal.addEventListener('click', e => {
+    if (e.target === settingsModal) {
+      saveSettings();
+      settingsModal.classList.remove('active');
+    }
+  });
+  const modalContent = document.querySelector('.modal-content');
+  modalContent.addEventListener('click', e => {
+    e.stopPropagation();
+  });
+  dragElement(document.querySelector('.floating-btn'));
+  handleSearch();
+  handleIconSizeChange();
+  const primaButton = document.querySelector('.taskbar-app.prima-text');
+  primaButton.addEventListener('click', e => {
+    e.stopPropagation();
+    togglePrimaMenu();
+  });
+});
+document.addEventListener('DOMContentLoaded', handleSearch);
+document.addEventListener('DOMContentLoaded', loadSettings);
+window.addEventListener('resize', () => {
+  const appGrids = document.querySelectorAll('.app-grid');
+  const width = window.innerWidth;
+  const minColWidth = width <= 480 ? 60 : width <= 768 ? 70 : 80;
+  appGrids.forEach(grid => {
+    const containerWidth = grid.offsetWidth;
+    const columns = Math.floor(containerWidth / minColWidth);
+    grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+  });
+});
+document.addEventListener('click', e => {
+  const primaMenu = document.querySelector('.prima-menu');
+  const primaButton = document.querySelector('.taskbar-app.prima-text');
+  if (!primaMenu.contains(e.target) && !primaButton.contains(e.target)) {
+    primaMenu.classList.remove('active');
+  }
+});</script>
+  </head>
+  <body>
+    <div class="container" style="max-width: 100%; padding: 0 10px;">
+      <h1 class="logo">P.R.I.M.A</h1>
+      <div class="search-container">
+        <div class="search-wrapper">
+          <span class="search-icon">&#x1f50d;</span>
+          <input type="search" class="search-bar" placeholder="Rechercher des applications ou sur le web...">
+          <button class="search-type" title="Changer le type de recherche">&#x1f504;</button>
+          <div class="search-results"></div>
+        </div>
+      </div>
+      
+      <div class="app-pages-container">
+        <div class="app-pages">
+          <div class="app-page">
+            <h2 class="category-name">Services PRIMA</h2>
+            <div class="app-grid">
+              <div class="app">
+                <div class="app-icon">&#x1f94f;</div>
+                <a href="https://example.com/prima">Prima</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">U</div>
+                <a href="https://example.com/uniformes">UniFormes</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4bc;</div>
+                <a href="https://example.com/job">Job</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x2139;&#xfe0f;</div>
+                <a href="https://example.com/info">Info</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x2753;</div>
+                <a href="https://example.com/investir">Investir</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f393;</div>
+                <a href="https://example.com/education">Education</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f976;</div>
+                <a href="https://example.com/netweb">Netweb</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4f1;</div>
+                <a href="https://example.com/prima-apps">Prima Apps</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4f1;</div>
+                <a href="https://example.com/media">M&#xe9;dia</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-page">
+            <h2 class="category-name">&#xc9;tudes</h2>
+            <div class="app-grid">
+              <div class="app">
+                <div class="app-icon">&#x1f4da;</div>
+                <a href="https://example.com/notes">Notes</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4dd;</div>
+                <a href="https://example.com/tasks">T&#xe2;ches</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4c1;</div>
+                <a href="https://example.com/library">Biblioth&#xe8;que</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4ca;</div>
+                <a href="https://example.com/courses">Cours</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4c5;</div>
+                <a href="https://example.com/schedule">Emploi du temps</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4c8;</div>
+                <a href="https://example.com/grades">Notes et r&#xe9;sultats</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f50d;</div>
+                <a href="https://example.com/research">Recherches</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4c4;</div>
+                <a href="https://example.com/resources">Ressources</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-page">
+            <h2 class="category-name">Programmation</h2>
+            <div class="app-grid">
+              <div class="app">
+                <div class="app-icon">&#x1f4bb;</div>
+                <a href="https://example.com/programming">Programmation</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f6e0;&#xfe0f;</div>
+                <a href="https://example.com/tools">Outils Dev</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4f1;</div>
+                <a href="https://example.com/mobile">Apps Mobiles</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f310;</div>
+                <a href="https://example.com/web">Web Dev</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f916;</div>
+                <a href="https://example.com/ai">Intelligence Artificielle</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f512;</div>
+                <a href="https://example.com/security">S&#xe9;curit&#xe9;</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4ca;</div>
+                <a href="https://example.com/data">Data Science</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x2601;&#xfe0f;</div>
+                <a href="https://example.com/cloud">Cloud Computing</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-page">
+            <h2 class="category-name">Communication</h2>
+            <div class="app-grid">
+              <div class="app">
+                <div class="app-icon">&#x1f4f1;</div>
+                <a href="https://example.com/messages">Messages</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4e7;</div>
+                <a href="https://example.com/email">Email</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f465;</div>
+                <a href="https://example.com/teams">&#xc9;quipes</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4de;</div>
+                <a href="https://example.com/calls">Appels</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4f9;</div>
+                <a href="https://example.com/video">Vid&#xe9;o</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f5e3;&#xfe0f;</div>
+                <a href="https://example.com/forum">Forum</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4e2;</div>
+                <a href="https://example.com/announcements">Annonces</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f91d;</div>
+                <a href="https://example.com/collaboration">Collaboration</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-page">
+            <h2 class="category-name">Outils</h2>
+            <div class="app-grid">
+              <div class="app">
+                <div class="app-icon">&#x1f527;</div>
+                <a href="https://example.com/settings">Param&#xe8;tres</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f6e0;&#xfe0f;</div>
+                <a href="https://example.com/tools">Outils</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4ca;</div>
+                <a href="https://example.com/analytics">Analytiques</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f50d;</div>
+                <a href="https://example.com/search">Recherche</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f512;</div>
+                <a href="https://example.com/security">S&#xe9;curit&#xe9;</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f4c1;</div>
+                <a href="https://example.com/storage">Stockage</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f504;</div>
+                <a href="https://example.com/sync">Synchronisation</a>
+              </div>
+              <div class="app">
+                <div class="app-icon">&#x1f914;</div>
+                <a href="https://example.com/help">Aide</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="navigation-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <button class="settings-btn">
+      <svg viewBox="0 0 24 24">
+        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+      </svg>
+    </button>
+    <div class="floating-btn">
+      &#x1f535;
+    </div>
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Param&#xe8;tres</h2>
+          <button class="modal-close-x">&#xd7;</button>
+        </div>
+        
+        <div class="setting-group">
+          <label for="icon-size">Taille des ic&#xf4;nes:</label>
+          <input type="range" id="icon-size" min="20" max="100" value="40" step="5">
+          <span id="icon-size-value">40px</span>
+        </div>
+
+        <div class="setting-group">
+          <label for="background-input">Fond d&apos;&#xe9;cran:</label>
+          <input type="file" id="background-input" accept="image/*">
+        </div>
+
+        <div class="setting-group">
+          <label for="background-style">Style du fond d&apos;&#xe9;cran:</label>
+          <select id="background-style">
+            <option value="cover">Remplir</option>
+            <option value="contain">D&#xe9;couper</option>
+            <option value="repeat">Mosa&#xef;que</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label for="background-time">Temps entre changements (secondes):</label>
+          <input type="number" id="background-time" min="1" value="30">
+        </div>
+
+        <div class="setting-group">
+          <label for="background-auto">Rotation automatique:</label>
+          <input type="checkbox" id="background-auto">
+        </div>
+
+        <div class="setting-group">
+          <label for="language">Langue:</label>
+          <select id="language">
+            <option value="fr" selected> Fran&#xe7;ais</option>
+            <option value="en">English</option>
+            <option value="es">Espa&#xf1;ol</option>
+          </select>
+        </div>
+
+        <button class="close-modal">Fermer</button>
+      </div>
+    </div>
+    <div class="taskbar">
+      <div class="taskbar-apps">
+        <div class="taskbar-app prima-text">PRIMA</div>
+        <div class="taskbar-app">&#x1f4f1;</div>
+        <div class="prima-menu">
+          <a href="apps/file-explorer/index.html" class="prima-menu-item">
+            <div class="prima-menu-icon">&#x1f4c2;</div>
+            <div class="prima-menu-text">règle de 3</div>
+          </a>
+          <a href="apps/settings/index.html" class="prima-menu-item">
+            <div class="prima-menu-icon">&#x2699;</div>
+            <div class="prima-menu-text">compta &#xe8;bilité</div>
+          </a>
+          <a href="apps/calculator/index.html" class="prima-menu-item">
+            <div class="prima-menu-icon">&#x1f4c1;</div>
+            <div class="prima-menu-text">Calculatrice</div>
+          </a>
+          <a href="apps/notes/index.html" class="prima-menu-item">
+            <div class="prima-menu-icon">&#x1f4dd;</div>
+            <div class="prima-menu-text">Notes</div>
+          </a>
+          <a href="apps/menstruel/index.html" class="prima-menu-item">
+            <div class="prima-menu-icon">&#x1f4c5;</div>
+            <div class="prima-menu-text">menstruel</div>
+          </a>
+        </div>
+      </div>
+      <div class="taskbar-right">
+        <div class="taskbar-app">&#x2795;</div>
+        <div class="taskbar-app">&#x1f464;</div>
+      </div>
+    </div>
+  </body>
+</html>

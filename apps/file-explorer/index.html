@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Règle de Trois</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f06, #4a90e2); /* Dégradé de couleurs */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Ombre portée pour le titre */
+        }
+
+        .calculator {
+            max-width: 400px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px; /* Coins arrondis */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 12px);
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #007bff; /* Bordure bleue au focus */
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px); /* Effet de survol */
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e7f3fe;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            font-size: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .navigation-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navigation-buttons button {
+            width: 48%;
+            background-color: #28a745;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .navigation-buttons button:hover {
+            background-color: #218838;
+            transform: translateY(-2px); /* Effet de survol */
+        }
+    </style>
+</head>
+<body>
+
+<h1>Calculateur de Règle de Trois</h1>
+<div class="calculator">
+    <form id="ruleOfThreeForm">
+        <div class="form-group">
+            <label for="valueA">Valeur A :</label>
+            <input type="number" id="valueA" required>
+        </div>
+        <div class="form-group">
+            <label for="valueB">Valeur B :</label>
+            <input type="number" id="valueB" required>
+        </div>
+        <div class="form-group">
+            <label for="valueX">Valeur X :</label>
+            <input type="number" id="valueX" required>
+        </div>
+        <button type="submit">Calculer</button>
+    </form>
+    <div id="result" class="result"></div>
+</div>
+
+<div class="navigation-buttons">
+    <button onclick="window.history.back()">Retour</button>
+    <button onclick="window.location.href='index.html'">Accueil</button>
+</div>
+
+<script>
+    document.getElementById("ruleOfThreeForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Empêche le rechargement de la page
+
+        // Récupère les valeurs saisies
+        const valueA = parseFloat(document.getElementById("valueA").value);
+        const valueB = parseFloat(document.getElementById("valueB").value);
+        const valueX = parseFloat(document.getElementById("valueX").value);
+
+        // Vérifie que les valeurs sont valides
+        if (isNaN(valueA) || isNaN(valueB) || isNaN(valueX) || valueA === 0) {
+            alert("Veuillez entrer des valeurs valides !");
+            return;
+        }
+
+        // Effectue le calcul de la règle de trois
+        const resultY = (valueB * valueX) / valueA;
+
+        // Affiche le résultat
+        const resultDiv = document.getElementById("result");
+        resultDiv.style.display = "block";
+        resultDiv.textContent = `Résultat : Y = ${resultY.toFixed(2)}`;
+    });
+</script>
+
+</body>
+</html>
+
+👩‍💻si 1 fille te trompe 3 fois 💔 7 filles le ferons combien de fois 😬🇨🇲
